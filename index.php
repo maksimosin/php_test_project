@@ -30,12 +30,6 @@ if (isset($_GET['form'])) // If the "Search" button pressed
 	$room5 = isset($_GET['rooms5'])? "rooms[]=5" : "";
 	$photo = isset($_GET['photo'])? "only_photo=1" : "";
 	
-	/*$data = array('foo'=>'bar',
-              'baz'=>'boom',
-              'cow'=>'milk',
-              'php'=>'hypertext processor');
-              
-echo http_build_query($data);*/
 	$content=getUrlContent("http://50.bn.ru/sale/$type/?$price_from_par&$price_to_par&$room1&$room2&$room3&$room4&$room5&$photo");
 	
 }
