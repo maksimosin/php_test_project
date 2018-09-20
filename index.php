@@ -1,101 +1,83 @@
 <? 
-if (isset($_GET['form'])) // If the "Search" button pressed
-{
-	$type = htmlspecialchars($_GET["type"] );
-	
-	if (isset($_GET['price_from']))
-	{			
-		$price_from = (int) preg_replace("/[^0-9]/", '', $_GET['price_from']);
-		$price_from_par= "price[from]=".$price_from;
-	} 
-	else $price_from=0;
-	
-	if (isset($_GET['price_to']))
-	{			
-		$price_to = (int) preg_replace("/[^0-9]/", '', $_GET['price_to']);
-		$price_to_par= "price[to]=".$price_to;
-	} 
-	else $price_to=0;
-	
-	if	(isset($_GET['price_from'])&&isset($_GET['price_to'])&&($price_from>$price_to)) 
-		{   //Р•СЃР»Рё "С†РµРЅР° РѕС‚" Р±РѕР»СЊС€Рµ, С‡РµРј "С†РµРЅР° РґРѕ"
-			$price_from_par = ""; 
-			$price_from="";
-		}
-		
-	$room1 = isset($_GET['rooms1'])? "rooms[]=1" : "";
-	$room2 = isset($_GET['rooms2'])? "rooms[]=2" : "";
-	$room3 = isset($_GET['rooms3'])? "rooms[]=3" : "";
-	$room4 = isset($_GET['rooms4'])? "rooms[]=4" : "";
-	$room5 = isset($_GET['rooms5'])? "rooms[]=5" : "";
-	$photo = isset($_GET['photo'])? "only_photo=1" : "";
-	
-	$content=getUrlContent("http://50.bn.ru/sale/$type/?$price_from_par&$price_to_par&$room1&$room2&$room3&$room4&$room5&$photo");
-	
-}
+const HOST = "http://50.bn.ru/sale/";
+const SORTBY = "price";
+const SORTORDER = "DESC";
+include 'functions.php';
 
-function getUrlContent($url){
-$ch = curl_init();
-curl_setopt($ch, CURLOPT_URL, $url);
-curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; .NET CLR 1.1.4322)');
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-curl_setopt($ch, CURLOPT_TIMEOUT, 5);
-$data = curl_exec($ch);
-$httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-curl_close($ch);
-return ($httpcode>=200 && $httpcode<300) ? $data : false;
+if (isset($_GET['form'])) 
+{
+	$type = 		htmlspecialchars($_GET["type"] );
+	$price_from = 	filterNumber($_GET['price_from']);
+	$price_to = 	filterNumber($_GET['price_to']);
+	
+	if	(($price_to!=0) && ($price_from > $price_to)) 
+	{   
+		$price_from=0;
+	}
+			
+	$data = array('rooms' => $_GET['rooms'],
+				  'only_photo'=> isset($_GET['photo']),
+				  'price' => array ('from' => $price_from,
+									'to' => $price_to)
+				  );
+
+	$query = HOST.$type."/?sort=".SORTBY."&sortorder=".SORTORDER."&". http_build_query($data);
+	
+	$content=getUrlContent($query);
 }
 ?>
-
 <html >
 <head>
 </head>
 <body>
 <form  >
 
-<label for="type">РўРёРї РЅРµРґРІРёР¶РёРјРѕСЃС‚Рё <select name="type" >
-	<option disabled="disabled">Р¶РёР»Р°СЏ</option>                                    
-	<option <?= ($_GET[type]=='city/flats')? "selected" : "" ?> value="city/flats">РєРІР°СЂС‚РёСЂС‹ (РІС‚РѕСЂРёС‡РєР°)</option>                        
-	<option <?= ($_GET[type]=='city/rooms')? "selected" : "" ?> value="city/rooms">РєРѕРјРЅР°С‚С‹</option>                        
-	<option <?= ($_GET[type]=='city/elite')? "selected" : "" ?> value="city/elite">СЌР»РёС‚РЅР°СЏ РЅРµРґРІРёР¶РёРјРѕСЃС‚СЊ</option>                        
-	<option <?= ($_GET[type]=='city/newflats')? "selected" : "" ?> value="city/newflats">РЅРѕРІРѕСЃС‚СЂРѕР№РєРё</option>                        
-	<option disabled="disabled">Р·Р°РіРѕСЂРѕРґРЅР°СЏ</option>                                    
-	<option <?= ($_GET[type]=='country/houses')? "selected" : "" ?> value="country/houses" >РґРѕРјР°</option>                        
-	<option <?= ($_GET[type]=='country/cottages')? "selected" : "" ?> value="country/cottages">РєРѕС‚С‚РµРґР¶Рё</option>                        
-	<option <?= ($_GET[type]=='country/lands')? "selected" : "" ?> value="country/lands">СѓС‡Р°СЃС‚РєРё</option>                        
-	<option disabled="disabled">РєРѕРјРјРµСЂС‡РµСЃРєР°СЏ</option>                                    
-	<option <?= ($_GET[type]=='commerce/offices')? "selected" : "" ?> value="commerce/offices">РѕС„РёСЃС‹</option>                        
-	<option <?= ($_GET[type]=='commerce/comm_new')? "selected" : "" ?> value="commerce/comm_new">РїРѕРјРµС‰РµРЅРёСЏ РІ СЃС‚СЂРѕСЏС‰РёС…СЃСЏ РґРѕРјР°С…</option>                        
-	<option <?= ($_GET[type]=='commerce/service')? "selected" : "" ?> value="commerce/service">РїРѕРјРµС‰РµРЅРёСЏ РІ СЃС„РµСЂРµ СѓСЃР»СѓРі</option>                        
-	<option <?= ($_GET[type]=='commerce/different')? "selected" : "" ?> value="commerce/different">РїРѕРјРµС‰РµРЅРёСЏ СЂР°Р·Р»РёС‡РЅРѕРіРѕ РЅР°Р·РЅР°С‡РµРЅРёСЏ</option>                        
-	<option <?= ($_GET[type]=='commerce/freestanding')? "selected" : "" ?> value="commerce/freestanding">РѕС‚РґРµР»СЊРЅРѕ СЃС‚РѕСЏС‰РёРµ Р·РґР°РЅРёСЏ</option>                        
-	<option <?= ($_GET[type]=='commerce/storage')? "selected" : "" ?> value="commerce/storage">РїСЂРѕРёР·РІРѕРґСЃС‚РІРµРЅРЅРѕ-СЃРєР»Р°РґСЃРєРёРµ РїРѕРјРµС‰РµРЅРёСЏ</option>                        
-	<option <?= ($_GET[type]=='commerce/comm_lands')? "selected" : "" ?> value="commerce/comm_lands">Р·РµРјРµР»СЊРЅС‹Рµ СѓС‡Р°СЃС‚РєРё</option>            		
+<label for="type">Тип недвижимости <select name="type" >
+	<option disabled="disabled">жилая</option>                                    
+	<option <?= ($_GET[type]=='city/flats')? "selected" : "" ?> value="city/flats">квартиры (вторичка)</option>                        
+	<option <?= ($_GET[type]=='city/rooms')? "selected" : "" ?> value="city/rooms">комнаты</option>                        
+	<option <?= ($_GET[type]=='city/elite')? "selected" : "" ?> value="city/elite">элитная недвижимость</option>                        
+	<option <?= ($_GET[type]=='city/newflats')? "selected" : "" ?> value="city/newflats">новостройки</option>                        
+	<option disabled="disabled">загородная</option>                                    
+	<option <?= ($_GET[type]=='country/houses')? "selected" : "" ?> value="country/houses" >дома</option>                        
+	<option <?= ($_GET[type]=='country/cottages')? "selected" : "" ?> value="country/cottages">коттеджи</option>                        
+	<option <?= ($_GET[type]=='country/lands')? "selected" : "" ?> value="country/lands">участки</option>                        
+	<option disabled="disabled">коммерческая</option>                                    
+	<option <?= ($_GET[type]=='commerce/offices')? "selected" : "" ?> value="commerce/offices">офисы</option>                        
+	<option <?= ($_GET[type]=='commerce/comm_new')? "selected" : "" ?> value="commerce/comm_new">помещения в строящихся домах</option>                        
+	<option <?= ($_GET[type]=='commerce/service')? "selected" : "" ?> value="commerce/service">помещения в сфере услуг</option>                        
+	<option <?= ($_GET[type]=='commerce/different')? "selected" : "" ?> value="commerce/different">помещения различного назначения</option>                        
+	<option <?= ($_GET[type]=='commerce/freestanding')? "selected" : "" ?> value="commerce/freestanding">отдельно стоящие здания</option>                        
+	<option <?= ($_GET[type]=='commerce/storage')? "selected" : "" ?> value="commerce/storage">производственно-складские помещения</option>                        
+	<option <?= ($_GET[type]=='commerce/comm_lands')? "selected" : "" ?> value="commerce/comm_lands">земельные участки</option>            		
 </select>
-<label for="price_from">Р¦РµРЅР° РѕС‚</label>
-<input type="number" name="price_from" step=50000 min=0 max=10000000 value="<?= $price_from ?>"> РґРѕ 
-<input type="number" name="price_to" step=50000 min=100000 max=10000000 value="<?= $price_to ?>">
-<label for="rooms">РљРѕРјРЅР°С‚С‹ 1<input type="checkbox" name="rooms1" value ="1" <?= isset($_GET[rooms1])? "checked" : "" ?>>
-2 <input type="checkbox" name="rooms2" <?= isset($_GET[rooms2])? "checked" : "" ?>>
-3 <input type="checkbox" name="rooms3" <?= isset($_GET[rooms3])? "checked" : "" ?>>
-4 <input type="checkbox" name="rooms4" <?= isset($_GET[rooms4])? "checked" : "" ?>>
-5+ <input type="checkbox" name="rooms5" <?= isset($_GET[rooms5])? "checked" : "" ?>>
-С‚РѕР»СЊРєРѕ СЃ С„РѕС‚Рѕ <input type="checkbox" name="photo" <?= isset($_GET[photo])? "checked" : "" ?>>
+<label for="price_from">Цена от</label>
+<input type="number" name="price_from" step=50000 min=0 value="<?= $price_from ?>"> до 
+<input type="number" name="price_to" step=50000 min=0  value="<?= $price_to ?>">
+<label for="rooms">Комнаты 1<input type="checkbox" name="rooms[1]" value ="1" <?= isset($_GET[rooms][1])? "checked" : "" ?>>
+2 <input type="checkbox" name="rooms[2]" value="2" <?= isset($_GET[rooms][2])? "checked" : "" ?>>
+3 <input type="checkbox" name="rooms[3]" value="3" <?= isset($_GET[rooms][3])? "checked" : "" ?>>
+4 <input type="checkbox" name="rooms[4]" value="4" <?= isset($_GET[rooms][4])? "checked" : "" ?>>
+5+ <input type="checkbox" name="rooms[5]" value="5" <?= isset($_GET[rooms][5])? "checked" : "" ?>>
+только с фото <input type="checkbox" name="photo"  <?= isset($_GET[photo])? "checked" : "" ?>>
 <input type="hidden" name="form" value="1">
-<input type="submit" value="РќР°Р№С‚Рё">
+<input type="submit" value="Найти">
 </form>
 
 <table align="center">
 <tr><td>
-<?  // Р’С‹РІРµРґРµРј С‚Р°Р±Р»РёС†Сѓ
-if ($content==false) echo "РќРµ СѓРґР°Р»РѕСЃСЊ РїРѕРґРєР»СЋС‡РёС‚СЃСЏ Рє СЃР°Р№С‚Сѓ";
-else
+<?  // Выведем таблицу
+if (isset($_GET['form']))
 {
-	$begin = stripos($content, 'class="result"')+15;
-	$content = substr($content, $begin, stripos($content, '<div class="pager">')- $begin); // Р’С‹СЂРµР¶РµРј С‚РѕР»СЊРєРѕ С‚Р°Р±Р»РёС†Сѓ
-	$content = preg_replace("#<a href=[^>]*(.*?)<\/a>#is", "\$1", $content); //РЈРґР°Р»РµРЅРёРµ РЅРµСЂР°Р±РѕС‚Р°СЋС‰РµР№ СЃСЃС‹Р»РєРё
-	echo $content;
+	if ($content) 
+	{
+		$begin = stripos($content, 'class="result"')+15;
+		$end   = stripos($content, '<div class="pager">');
+		$content = substr($content, $begin, $end - $begin); // Вырежем только таблицу
+		$content = preg_replace("#<a href=[^>]*(.*?)<\/a>#is", "\$1", $content); //Удаление неработающей ссылки
+		echo $content;
+	}
+	else echo "Не удалось подключится к сайту";
 }
 ?>
 </td></tr>
