@@ -8,22 +8,22 @@ include 'process.php';?>
 <form  >
 	<label for="type">Тип недвижимости <select name="type" >
 		<option disabled="disabled">жилая</option>                                    
-		<option <?= ($_GET['type']=='city/flats')? "selected" : "" ?> value="city/flats">квартиры (вторичка)</option>                        
-		<option <?= ($_GET['type']=='city/rooms')? "selected" : "" ?> value="city/rooms">комнаты</option>                        
-		<option <?= ($_GET['type']=='city/elite')? "selected" : "" ?> value="city/elite">элитная недвижимость</option>                        
-		<option <?= ($_GET['type']=='city/newflats')? "selected" : "" ?> value="city/newflats">новостройки</option>                        
+		<option <?= ($type=='city/flats')? "selected" : "" ?> value="city/flats">квартиры (вторичка)</option>                        
+		<option <?= ($type=='city/rooms')? "selected" : "" ?> value="city/rooms">комнаты</option>                        
+		<option <?= ($type=='city/elite')? "selected" : "" ?> value="city/elite">элитная недвижимость</option>                        
+		<option <?= ($type=='city/newflats')? "selected" : "" ?> value="city/newflats">новостройки</option>                        
 		<option disabled="disabled">загородная</option>                                    
-		<option <?= ($_GET['type']=='country/houses')? "selected" : "" ?> value="country/houses" >дома</option>                        
-		<option <?= ($_GET['type']=='country/cottages')? "selected" : "" ?> value="country/cottages">коттеджи</option>                        
-		<option <?= ($_GET['type']=='country/lands')? "selected" : "" ?> value="country/lands">участки</option>                        
+		<option <?= ($type=='country/houses')? "selected" : "" ?> value="country/houses" >дома</option>                        
+		<option <?= ($type=='country/cottages')? "selected" : "" ?> value="country/cottages">коттеджи</option>                        
+		<option <?= ($type=='country/lands')? "selected" : "" ?> value="country/lands">участки</option>                        
 		<option disabled="disabled">коммерческая</option>                                    
-		<option <?= ($_GET['type']=='commerce/offices')? "selected" : "" ?> value="commerce/offices">офисы</option>                        
-		<option <?= ($_GET['type']=='commerce/comm_new')? "selected" : "" ?> value="commerce/comm_new">помещения в строящихся домах</option>                        
-		<option <?= ($_GET['type']=='commerce/service')? "selected" : "" ?> value="commerce/service">помещения в сфере услуг</option>                        
-		<option <?= ($_GET['type']=='commerce/different')? "selected" : "" ?> value="commerce/different">помещения различного назначения</option>                        
-		<option <?= ($_GET['type']=='commerce/freestanding')? "selected" : "" ?> value="commerce/freestanding">отдельно стоящие здания</option>                        
-		<option <?= ($_GET['type']=='commerce/storage')? "selected" : "" ?> value="commerce/storage">производственно-складские помещения</option>                        
-		<option <?= ($_GET['type']=='commerce/comm_lands')? "selected" : "" ?> value="commerce/comm_lands">земельные участки</option>            		
+		<option <?= ($type=='commerce/offices')? "selected" : "" ?> value="commerce/offices">офисы</option>                        
+		<option <?= ($type=='commerce/comm_new')? "selected" : "" ?> value="commerce/comm_new">помещения в строящихся домах</option>                        
+		<option <?= ($type=='commerce/service')? "selected" : "" ?> value="commerce/service">помещения в сфере услуг</option>                        
+		<option <?= ($type=='commerce/different')? "selected" : "" ?> value="commerce/different">помещения различного назначения</option>                        
+		<option <?= ($type=='commerce/freestanding')? "selected" : "" ?> value="commerce/freestanding">отдельно стоящие здания</option>                        
+		<option <?= ($type=='commerce/storage')? "selected" : "" ?> value="commerce/storage">производственно-складские помещения</option>                        
+		<option <?= ($type=='commerce/comm_lands')? "selected" : "" ?> value="commerce/comm_lands">земельные участки</option>            		
 	</select>
 	<label for="price_from">Цена от</label>
 	<input type="number" name="price_from" step=50000 min=0 value="<?= $price_from ?>"> до 

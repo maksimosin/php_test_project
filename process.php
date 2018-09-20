@@ -3,21 +3,24 @@ const HOST = "http://50.bn.ru/sale/";
 const SORTBY = "price";
 const SORTORDER = "DESC";
 include 'functions.php';
+$table= "";
+$type = "";
 
 if (isset($_GET['form'])) 
 {
 	$type = 		htmlspecialchars($_GET["type"] );
 	$price_from = 	filterNumber($_GET['price_from']);
 	$price_to = 	filterNumber($_GET['price_to']);
-	$table= "";
+	$rooms=			isset($_GET['rooms']) ? $_GET['rooms'] : null;
+	$only_photo=	isset($_GET['photo']);
 	
 	if	(($price_to!=0) && ($price_from > $price_to)) 
 	{   
 		$price_from=0;
 	}
 			
-	$data = array('rooms' => $_GET['rooms'],
-				  'only_photo'=> isset($_GET['photo']),
+	$data = array('rooms' => $rooms,
+				  'only_photo'=> $only_photo,
 				  'price' => array ('from' => $price_from,
 									'to' => $price_to)
 				  );
