@@ -9,7 +9,7 @@ if (isset($_GET['form']))
 	$type = 		htmlspecialchars($_GET["type"] );
 	$price_from = 	filterNumber($_GET['price_from']);
 	$price_to = 	filterNumber($_GET['price_to']);
-	
+
 	if	(($price_to!=0) && ($price_from > $price_to)) 
 	{   
 		$price_from=0;
