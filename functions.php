@@ -16,4 +16,19 @@ function filterNumber ($string)
 {
 	return isset($string) ? (int) preg_replace("/[^0-9]/", '', $string) : 0;
 }
+
+function get_table ($content, $table_class)
+{
+	$begin_str ='class="'.$table_class.'">';  //начало
+	$begin_position = stripos($content, $begin_str)+strlen($begin_str);
+	
+	$end_str = '<div class="pager">'; // конец таблицы
+	$end_position   = stripos($content, $end_str) -strlen($end_str);
+	
+	$table = substr($content, $begin_position, $end_position - $begin_position); // Вырежем только таблицу
+	$table = preg_replace("#<a href=[^>]*(.*?)<\/a>#is", "\$1", $table); //Удаление ссылок
+	
+	return $table;
+}
+
 ?>
