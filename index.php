@@ -1,4 +1,6 @@
-﻿<?include 'process.php';?>
+﻿<?php
+error_reporting(E_ALL);
+include 'process.php';?>
 <html >
 <head>
 </head>
