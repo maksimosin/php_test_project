@@ -6,7 +6,7 @@ include 'process.php';?>
 </head>
 <body>
 <form  >
-	<label for="type">Тип недвижимости <select name="type" >
+	<label for="type">Тип недвижимости</label> <select name="type" >
 		<option disabled="disabled">жилая</option>                                    
 		<option <?= ($type=='city/flats')? "selected" : "" ?> value="city/flats">квартиры (вторичка)</option>                        
 		<option <?= ($type=='city/rooms')? "selected" : "" ?> value="city/rooms">комнаты</option>                        

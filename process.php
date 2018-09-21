@@ -5,6 +5,8 @@ const SORTORDER = "DESC";
 include 'functions.php';
 $table= "";
 $type = "";
+$price_from=0;
+$price_to  =0;
 
 if (isset($_GET['form'])) 
 {
@@ -12,7 +14,7 @@ if (isset($_GET['form']))
 	$price_from = 	filterNumber($_GET['price_from']);
 	$price_to = 	filterNumber($_GET['price_to']);
 	$rooms=			isset($_GET['rooms']) ? $_GET['rooms'] : null;
-	$only_photo=	isset($_GET['photo']);
+	$only_photo=	isset($_GET['photo']) ? "only_photo=1" : "";
 	
 	if	(($price_to!=0) && ($price_from > $price_to)) 
 	{   
@@ -20,13 +22,12 @@ if (isset($_GET['form']))
 	}
 			
 	$data = array('rooms' => $rooms,
-				  'only_photo'=> $only_photo,
 				  'price' => array ('from' => $price_from,
 									'to' => $price_to)
 				  );
 
-	$query = HOST.$type."/?sort=".SORTBY."&sortorder=".SORTORDER."&". http_build_query($data);
-	
+	$query = HOST.$type."/?sort=".SORTBY."&sortorder=".SORTORDER."&".$only_photo."&". http_build_query($data);
+
 	$content=getUrlContent($query);
 	$content = mb_convert_encoding($content, 'utf-8', 'CP1251');
 	if ($content) 
